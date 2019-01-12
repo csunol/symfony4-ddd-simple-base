@@ -1,0 +1,45 @@
+version: "3"
+services:
+
+  nginx:
+    image: nginx:1.15.8-alpine
+    container_name: devel.nginx
+    depends_on:
+      - fpm
+    ports:
+      - "80:80"
+    volumes:
+      - .:/app
+      - ./etc/docker/devel/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./var/log/nginx:/var/log/nginx
+    working_dir: /app
+
+  fpm:
+    build:
+      context: ./etc/docker/devel/php/
+    container_name: devel.fpm
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - .:/app
+      - ~/.ssh:/root/.ssh
+    working_dir: /app
+
+  redis:
+    build:
+      context: ./etc/docker/devel/redis
+    container_name: devel.redis
+    ports:
+      - "6379:6379"
+
+  mysql:
+    image: mysql:5.7
+    container_name: devel.mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=app_db
+    tmpfs:
+      - /var/lib/mysql:rw
