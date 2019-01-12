@@ -6,4 +6,7 @@
 /public/bundles/
 /var/
 /vendor/
+/.idea/
+/.symfony/
+.symfony.cloud.yaml
 ###< symfony/framework-bundle ###
