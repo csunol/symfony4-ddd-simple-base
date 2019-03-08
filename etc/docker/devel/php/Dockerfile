@@ -1,10 +1,10 @@
-FROM php:7.2-fpm
+FROM php:7.3-fpm
 
 RUN apt-get update && \
     apt-get upgrade -y
 
 # Install extras
-RUN apt-get install -y curl git zlib1g-dev iproute2\
+RUN apt-get install -y zip unzip curl git zlib1g-dev iproute2\
     && docker-php-ext-install pdo pdo_mysql
 
 # Install composer
@@ -16,7 +16,7 @@ RUN pecl install -o -f redis \
         &&  docker-php-ext-enable redis
 
 # Install Xdebug extension
-RUN pecl install xdebug-2.6.1 \
+RUN pecl install xdebug-2.7.0 \
         &&  docker-php-ext-enable xdebug
 
 ENV XDEBUGINI_PATH=/usr/local/etc/php/conf.d/xdebug.ini
