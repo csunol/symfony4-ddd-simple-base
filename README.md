@@ -9,4 +9,4 @@ docker exec -it fpm_app bash
 composer install
 ```
 ## Xdebug in Phpstorm
-Go to PHP|Servers and map the root of the project to /app
+Go to PHP|Servers and map the project root to /app
