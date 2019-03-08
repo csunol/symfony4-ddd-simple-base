@@ -91,10 +91,6 @@ class BookController extends AbstractController
      *     response=400,
      *     description="Invalid parameters"
      * )
-     * @SWG\Response(
-     *     response=400,
-     *     description="Bad request"
-     * )
      * @SWG\Parameter(
      *     name="title",
      *     in="body",
@@ -121,8 +117,8 @@ class BookController extends AbstractController
 
         $createBookCommand = new CreateBookCommand($title, $writer);
 
-        $this->createBookCommandHandler->handle($createBookCommand);
+        $book = $this->createBookCommandHandler->handle($createBookCommand);
 
-        return JsonResponse::create(null, JsonResponse::HTTP_CREATED);
+        return JsonResponse::create(BookTransformer::transform($book), JsonResponse::HTTP_CREATED);
     }
 }

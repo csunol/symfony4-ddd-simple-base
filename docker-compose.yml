@@ -3,7 +3,7 @@ services:
 
   nginx:
     image: nginx:1.15.8-alpine
-    container_name: devel.nginx
+    container_name: nginx_app
     depends_on:
       - fpm
     ports:
@@ -17,7 +17,7 @@ services:
   fpm:
     build:
       context: ./etc/docker/devel/php/
-    container_name: devel.fpm
+    container_name: fpm_app
     depends_on:
       - mysql
       - redis
@@ -29,13 +29,13 @@ services:
   redis:
     build:
       context: ./etc/docker/devel/redis
-    container_name: devel.redis
+    container_name: redis_app
     ports:
       - "6379:6379"
 
   mysql:
     image: mysql:5.7
-    container_name: devel.mysql
+    container_name: mysql_app
     ports:
       - "3306:3306"
     environment:

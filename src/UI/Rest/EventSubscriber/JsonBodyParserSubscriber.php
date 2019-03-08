@@ -17,26 +17,17 @@ class JsonBodyParserSubscriber implements EventSubscriberInterface
     public function onKernelRequest(GetResponseEvent $event): void
     {
         $request = $event->getRequest();
-
         if (!$this->isJsonRequest($request)) {
             return;
         }
-
         $content = $request->getContent();
-
-        if (empty($content) || is_null($content)) {
+        if (empty($content)) {
             return;
         }
-
-        $data = $this->parseBody($request);
-
-        if (!$this->isValidJson($data)) {
+        if (!$this->transformJsonBody($request)) {
             $response = Response::create('Unable to parse json request.', Response::HTTP_BAD_REQUEST);
             $event->setResponse($response);
-            return;
         }
-
-        $request->request->replace($data);
     }
 
     private function isJsonRequest(Request $request): bool
@@ -44,17 +35,20 @@ class JsonBodyParserSubscriber implements EventSubscriberInterface
         return 'json' === $request->getContentType();
     }
 
-    private function parseBody(Request $request): ?array
+    private function transformJsonBody(Request $request): bool
     {
-        return json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
+        if (JSON_ERROR_NONE !== json_last_error() || is_string($data)) {
+            return false;
+        }
+        if (null === $data) {
+            return true;
+        }
+        $request->request->replace($data);
+        return true;
     }
 
-    private function isValidJson(?array $data): bool
-    {
-        return !is_null($data);
-    }
-
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::REQUEST => 'onKernelRequest',

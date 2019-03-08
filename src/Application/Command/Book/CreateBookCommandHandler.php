@@ -19,7 +19,7 @@ class CreateBookCommandHandler
         $this->bookRepository = $bookRepository;
     }
 
-    public function handle(CreateBookCommand $createBookCommand): void
+    public function handle(CreateBookCommand $createBookCommand): Book
     {
         $book = new Book(
             $createBookCommand->getTitle(),
@@ -27,5 +27,7 @@ class CreateBookCommandHandler
         );
 
         $this->bookRepository->saveBook($book);
+
+        return $book;
     }
 }
