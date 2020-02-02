@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7.4-fpm
 
 RUN apt-get update && \
     apt-get upgrade -y
@@ -16,7 +16,7 @@ RUN pecl install -o -f redis \
         &&  docker-php-ext-enable redis
 
 # Install Xdebug extension
-RUN pecl install xdebug-2.7.0 \
+RUN pecl install xdebug-2.9.2 \
         &&  docker-php-ext-enable xdebug
 
 ENV XDEBUGINI_PATH=/usr/local/etc/php/conf.d/xdebug.ini
